@@ -33,7 +33,7 @@ namespace WebApplication1.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Email or passowrd is incorrect.");
+                    ModelState.AddModelError("", "Email or passowrd is incorrect.");
                     return View(model);
                 }
             }
@@ -63,7 +63,7 @@ namespace WebApplication1.Controllers
                 {
                     foreach (var error in result.Errors)
                     {
-                        ModelState.AddModelError(string.Empty, error.Description);
+                        ModelState.AddModelError("", error.Description);
                     }
                     return View(model);
                 }
@@ -73,6 +73,24 @@ namespace WebApplication1.Controllers
         public IActionResult VerifyEmail()
         {
             return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> VerifyEmail(VerifyEmailViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await userManager.FindByNameAsync(model.Email);
+                if (user == null)
+                {
+                    ModelState.AddModelError("", "Something is wrong!");
+                    return View(model);
+                }
+                else
+                {
+                    return RedirectToAction("ChangePassword", " Account", new {username = user.UserName});
+                }
+            }
+            return View(model);
         }
         public IActionResult ChangePassword()
         {
