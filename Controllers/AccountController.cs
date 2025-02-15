@@ -21,6 +21,24 @@ namespace WebApplication1.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Email or passowrd is incorrect.");
+                    return View(model);
+                }
+            }
+            return View(model);
+        }
         public IActionResult Register()
         {
             return View();
