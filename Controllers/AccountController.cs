@@ -12,5 +12,9 @@ namespace WebApplication1.Controllers
         {
             return View();
         }
+        public IActionResult VerifyEmail()
+        {
+            return View();
+        }
     }
 }
